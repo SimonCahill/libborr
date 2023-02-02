@@ -125,15 +125,17 @@ namespace borr {
 
     string language::removeInlineComments(const string& line) const {
         namespace rc = std::regex_constants;
-        static const regex COMMENT_REGEX = regex(R"(#[^\n]+$)", rc::optimize | rc::extended);
+        static const regex COMMENT_REGEX = regex(R"(#[^\n]+$)", rc::optimize);
 
         string copy = line;
-
-        while (std::regex_match(line, COMMENT_REGEX)) {
-            copy = regex_replace(copy, COMMENT_REGEX, "");
+        smatch matches;
+        if (std::regex_search(copy, matches, COMMENT_REGEX)) {
+            for (const auto& match : matches) {
+                copy = copy.replace(copy.find(match.str()), match.str().length(), "");
+            }
         }
 
-        return copy;
+        return extensions::trim(copy);
     }
 
     void language::parseLine(const string& line) {
