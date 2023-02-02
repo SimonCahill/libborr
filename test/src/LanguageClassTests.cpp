@@ -49,3 +49,29 @@ TEST_F(LanguageClassTests, testRemoveInlineComments) {
     ASSERT_EQ(removeInlineComments(TRANSLATION_WITH_COMMENT), R"(translation = "")");
     ASSERT_EQ(removeInlineComments(TRANSLATION_WITH_COMMENT_2), R"(translation[] = "")");
 }
+
+TEST_F(LanguageClassTests, testIsMultilineField) {
+    ASSERT_FALSE(isMultilineField(R"(translation)"));
+    ASSERT_TRUE(isMultilineField(R"(translation[])"));
+    ASSERT_TRUE(isMultilineField(R"(translation [])"));
+}
+
+TEST_F(LanguageClassTests, testIsTranslation) {
+    string field, value;
+
+    ASSERT_TRUE(isTranslation(R"(translation = "Test")", field, value));
+    ASSERT_EQ(field, "translation");
+    ASSERT_EQ(value, "Test");
+
+    ASSERT_TRUE(isTranslation(R"(translation       =           "Test")", field, value));
+    ASSERT_EQ(field, "translation");
+    ASSERT_EQ(value, "Test");
+
+    ASSERT_TRUE(isTranslation(R"(translation[] = "Multiline Test")", field, value));
+    ASSERT_EQ(field, "translation[]");
+    ASSERT_EQ(value, "Multiline Test");
+
+    ASSERT_FALSE(isTranslation("[bla]", field, value));
+    ASSERT_FALSE(isTranslation("oinoubiudwbiudbw9b9fb9f3ubpfbpf 3g93 3", field, value));
+    ASSERT_FALSE(isTranslation("", field, value));
+}

@@ -101,7 +101,7 @@ namespace borr {
 
     bool language::isTranslation(const string& line, string& outFieldName, string& outTranslation) const {
         namespace rc = std::regex_constants;
-        if (!std::regex_match(line, regex(TRANSLATION_REGEX.data(), rc::extended | rc::optimize))) { return false; }
+        if (!std::regex_match(line, regex(TRANSLATION_REGEX.data(), rc::optimize))) { return false; }
 
         // Now just split the string at the first '=' and return the two halfs
         const auto posOfDelim = line.find('=');
