@@ -43,3 +43,17 @@ TEST(ExtensionsTests, testTrimEndWithOtherChars) {
 
     ASSERT_EQ(borr::extensions::trimEnd(NON_TRIMMED_STRING, "$%&"), TRIMMED_STRING);
 }
+
+TEST(ExtensionsTests, testTrim) {
+    const static string NON_TRIMMED_STRING = " \t  THIS IS NOT TRIMMED   ";
+    const static string TRIMMED_STRING     = "THIS IS NOT TRIMMED"; // well I mean it kinda is now...
+
+    ASSERT_EQ(borr::extensions::trim(NON_TRIMMED_STRING), TRIMMED_STRING);
+}
+
+TEST(ExtensionsTests, testTrimWithOtherChars) {
+    const static string NON_TRIMMED_STRING = "///(())==THIS IS NOT TRIMMED$$$%%%&&&";
+    const static string TRIMMED_STRING     = "THIS IS NOT TRIMMED"; // well I mean it kinda is now...
+
+    ASSERT_EQ(borr::extensions::trim(NON_TRIMMED_STRING, "/()=$%&"), TRIMMED_STRING);
+}
