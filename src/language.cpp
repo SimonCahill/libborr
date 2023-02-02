@@ -56,9 +56,18 @@ namespace borr {
         for (const auto& line : splitter) {
             lang.parseLine(line.data());
         }
+
+        return lang;
     }
 
     language::language(): m_langDescription({}), m_langId({}), m_langVer(), m_translationDict({}) {
+    }
+
+    language::language(const language& instance):
+        m_langDescription(instance.m_langDescription),
+        m_langId(instance.m_langId),
+        m_langVer(instance.m_langVer),
+        m_translationDict(instance.m_translationDict) {
     }
 
     bool language::containsVariable(const string& translation, string& outVarName) const {
@@ -92,7 +101,7 @@ namespace borr {
 
     bool language::isTranslation(const string& line, string& outFieldName, string& outTranslation) const {
         namespace rc = std::regex_constants;
-        if (!std::regex_match(line, regex(TRANSLATION_REGEX.data(), rc::extended | rc::optimize))) { return false; }
+        if (!std::regex_match(line, regex(TRANSLATION_REGEX.data(), rc::optimize))) { return false; }
 
         // Now just split the string at the first '=' and return the two halfs
         const auto posOfDelim = line.find('=');
@@ -116,15 +125,17 @@ namespace borr {
 
     string language::removeInlineComments(const string& line) const {
         namespace rc = std::regex_constants;
-        static const regex COMMENT_REGEX = regex(R"(#[^\n]+$)", rc::optimize | rc::extended);
+        static const regex COMMENT_REGEX = regex(R"(#[^\n]+$)", rc::optimize);
 
         string copy = line;
-
-        while (std::regex_match(line, COMMENT_REGEX)) {
-            copy = regex_replace(copy, COMMENT_REGEX, "");
+        smatch matches;
+        if (std::regex_search(copy, matches, COMMENT_REGEX)) {
+            for (const auto& match : matches) {
+                copy = copy.replace(copy.find(match.str()), match.str().length(), "");
+            }
         }
 
-        return copy;
+        return extensions::trim(copy);
     }
 
     void language::parseLine(const string& line) {

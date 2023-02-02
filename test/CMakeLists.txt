@@ -8,6 +8,10 @@ if (NOT TARGET borr)
     message(FATAL_ERROR "Unit Tests must be built with main library!")
 endif()
 
+add_definitions(
+    -DUNIT_TESTING=1
+)
+
 get_target_property(borr_INCLUDE_DIRS borr INCLUDE_DIRECTORIES)
 include_directories(
     ${borr_INCLUDE_DIRS}
