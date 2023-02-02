@@ -1,0 +1,122 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Create build dir",
+			"linux": {
+				"command": "mkdir -p ${workspaceFolder}/build || true",
+				"options": { "cwd": "${workspaceFolder}" },
+			},
+			"osx": {
+				"command": "mkdir -p ${workspaceFolder}/build || true",
+				"options": { "cwd": "${workspaceFolder}" },
+			},
+			"type": "shell"
+		},
+		{
+			"label": "Generate Makefiles",
+			"command": "cmake",
+			"args": [
+				"${workspaceFolder}",
+				"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+				"-DCMAKE_BUILD_TYPE=Release"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"group": "build",
+			"dependsOn": "Create build dir"
+		},
+		{
+			"label": "Generate Makefiles (Debug)",
+			"command": "cmake",
+			"args": [
+				"${workspaceFolder}",
+				"-DCMAKE_BUILD_TYPE=Debug",
+				"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"group": "build",
+			"dependsOn": "Create build dir"
+		},
+		{
+			"label": "Generate Makefiles (with tests)",
+			"command": "cmake",
+			"args": [
+				"${workspaceFolder}",
+				"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+				"-DCMAKE_BUILD_TYPE=Release",
+				"-Dborr_BUILD_TESTS=ON"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"group": "build",
+			"dependsOn": "Create build dir"
+		},
+		{
+			"label": "Generate Makefiles (Debug with tests)",
+			"command": "cmake",
+			"args": [
+				"${workspaceFolder}",
+				"-DCMAKE_BUILD_TYPE=Debug",
+				"-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+				"-Dborr_BUILD_TESTS=ON"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"group": "build",
+			"dependsOn": "Create build dir"
+		},
+		{
+			"label": "Build libborr",
+			"command": "make",
+			"args": [
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"group": "build"
+		},
+		{
+			"label": "Clean Build",
+			"command": "make",
+			"args": [ "clean" ],
+			"options": {
+				"cwd": "${workspaceFolder}/build"
+			},
+			"group": "build"
+		},
+		{
+			"label": "Purge build dir",
+			"type": "shell",
+			"linux":{
+				"command": "rm -Rfv ${workspaceFolder}/build/*",
+				"options": { "cwd": "${workspaceFolder}/build" }
+			} ,
+			"osx": {
+				"command": "rm -Rfv ${workspaceFolder}/build/*",
+				"options": { "cwd": "${workspaceFolder}/build" }
+			},
+			"group": "build"
+		},
+
+		// TESTS
+		{
+			"label": "Run All Tests",
+			"command": "${workspaceFolder}/build/borrtests/borrtests",
+			"options": { "cwd": "${workspaceFolder}/build" },
+			"group": "test",
+			"dependsOn": "Build libborr"
+		},
+		{
+			"label": "Run All Tests (Windows)",
+			"command": "${workspaceFolder}/build/borrtests/borrtests.exe",
+			"options": { "cwd": "${workspaceFolder}/build" },
+			"group": "test"
+		}
+	]
+}
