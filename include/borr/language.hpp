@@ -174,12 +174,7 @@ namespace borr {
             const string&   getLangId() const { return m_langId; }
             const string&   getLangDescription() const { return m_langDescription; }
 
-        #ifndef UNIT_TESTING
-        protected: // +++ Constructor +++
-        #else
-        #warning "Unit tests are enabled! language constructor is now public!"
-        public: // +++ Constructor for unit testing +++
-        #endif
+        protected: // +++ Constructor ++
             language(); //!< Protected default ctor
 
         protected: // +++ Actual Parsing +++
