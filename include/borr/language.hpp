@@ -46,6 +46,10 @@ namespace borr {
     using translation_t = std::optional<string>;
     using ver_t = langversion;
 
+    #ifndef UNIT_TESTING
+    class LanguageClassTests;
+    #endif // UNIT_TESTING
+
     /**
      * @brief The language class - a language manager and file parser.
      * 
@@ -140,6 +144,12 @@ namespace borr {
      * And that's basically the main API. It's rare you'll need much more than that.
      */
     class language {
+        // #ifdef UNIT_TESTING // I'm too dumb for this right now
+        // #warning "Unit tests are enabled!"
+        // private:
+        // friend class LanguageClassTests;
+        // #endif // UNIT_TESTING
+
         public: // +++ Static Const +++
             static constexpr string_view LANG_ID_FIELD = "lang_id";
             static constexpr string_view LANG_VER_FIELD = "lang_ver";
@@ -153,7 +163,7 @@ namespace borr {
             language        fromString(const string&); //!< Load a pre-loaded language file from memory
 
         public: // +++ Constructor / Destructor +++
-            explicit        language(const language&) = default; //!< Default copy ctor
+                            language(const language&); //!< Default copy ctor
             ~               language() = default; //!< Default dtor
 
         public: // +++ Getters +++
@@ -164,7 +174,12 @@ namespace borr {
             const string&   getLangId() const { return m_langId; }
             const string&   getLangDescription() const { return m_langDescription; }
 
+        #ifndef UNIT_TESTING
         protected: // +++ Constructor +++
+        #else
+        #warning "Unit tests are enabled! language constructor is now public!"
+        public: // +++ Constructor for unit testing +++
+        #endif
             language(); //!< Protected default ctor
 
         protected: // +++ Actual Parsing +++
