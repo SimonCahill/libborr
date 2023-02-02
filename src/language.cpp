@@ -56,9 +56,18 @@ namespace borr {
         for (const auto& line : splitter) {
             lang.parseLine(line.data());
         }
+
+        return lang;
     }
 
     language::language(): m_langDescription({}), m_langId({}), m_langVer(), m_translationDict({}) {
+    }
+
+    language::language(const language& instance):
+        m_langDescription(instance.m_langDescription),
+        m_langId(instance.m_langId),
+        m_langVer(instance.m_langVer),
+        m_translationDict(instance.m_translationDict) {
     }
 
     bool language::containsVariable(const string& translation, string& outVarName) const {
