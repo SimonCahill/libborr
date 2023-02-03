@@ -1,5 +1,7 @@
 # libborr
 
+**!!! CURRENTLY WORK IN PROGRESS !!!**
+
 libborr is a language file parsing library which allows you to easily translate your C++ application to any language(s) you might need to!
 libboor uses regular expressions to efficiently and easily parse .borr (or .lang) files with their special structure to ensure you always know which language
 you're selecting and provides a super simple API to use.
