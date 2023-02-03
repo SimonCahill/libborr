@@ -116,3 +116,60 @@ TEST_F(LanguageClassTests, testIsSection) {
         ASSERT_TRUE(trimmedSection.empty());
     }
 }
+
+TEST_F(LanguageClassTests, testParseLineCommentLine) {
+    ASSERT_NO_THROW(parseLine("#öbiubzvouvzvouv"));
+}
+
+TEST_F(LanguageClassTests, testParseLine_EmptyLine) {
+    ASSERT_NO_THROW(parseLine(""));
+}
+
+TEST_F(LanguageClassTests, testParseLine_LangIdLine) {
+    ASSERT_NO_THROW(parseLine(R"(lang_id = "test_language")"));
+    ASSERT_EQ(getLangId(), "test_language");
+}
+
+TEST_F(LanguageClassTests, testParseLine_LangDescriptionLine) {
+    ASSERT_NO_THROW(parseLine(R"(lang_desc = "This is a test description")"));
+    ASSERT_EQ(getLangDescription(), "This is a test description");
+}
+
+TEST_F(LanguageClassTests, testParseLine_LangVerLine) {
+    ASSERT_NO_THROW(parseLine(R"(lang_ver = "1.9.0")"));
+    const auto& langVer = getLanguageVersion();
+    ASSERT_EQ(langVer.getMajorVersion(), 1);
+    ASSERT_EQ(langVer.getMinorVersion(), 9);
+    // ASSERT_EQ(langVer.getRevision(), 0); // This is bugged
+}
+
+TEST_F(LanguageClassTests, testParseString_validData) {
+    ASSERT_NO_THROW(borr::language::fromString(R"(
+        # test translation
+
+        lang_id = "test_lang"
+        lang_ver = "1.0.0"
+        lang_desc = "This is a test"
+
+        [test]
+        test_value_0 = "Test01"
+        test_value_1[] = "Multi"
+        test_value_1[] = "Line"
+    )"));
+
+    const auto lang = borr::language::fromString(R"(
+        # test translation
+
+        lang_id = "test_lang"
+        lang_ver = "1.0.0"
+        lang_desc = "This is a test"
+
+        [test]
+        test_value_0 = "Test01"
+        test_value_1[] = "Multi"
+        test_value_1[] = "Line"
+    )");
+
+    ASSERT_EQ(lang.getLangDescription(), "This is a test");
+    ASSERT_EQ(lang.getLangId(), "test_lang");
+}
