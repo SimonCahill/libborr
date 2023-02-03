@@ -9,12 +9,14 @@
  */
 
 #include <string>
+#include <vector>
 
 #include <gtest/gtest.h>
 
 #include "borr/extensions.hpp"
 
 using std::string;
+using std::vector;
 
 TEST(ExtensionsTests, testTrimStart) {
     const static string NON_TRIMMED_STRING = " \t  THIS IS NOT TRIMMED   ";
@@ -56,4 +58,34 @@ TEST(ExtensionsTests, testTrimWithOtherChars) {
     const static string TRIMMED_STRING     = "THIS IS NOT TRIMMED"; // well I mean it kinda is now...
 
     ASSERT_EQ(borr::extensions::trim(NON_TRIMMED_STRING, "/()=$%&"), TRIMMED_STRING);
+}
+
+TEST(ExtensionsTests, testSplitString_whitespace) {
+    const static string STRING_TO_SPLIT = "Test tseT sEtt";
+
+    vector<string> tokens;
+    ASSERT_TRUE(borr::extensions::splitString(STRING_TO_SPLIT, " ", tokens));
+
+    for (const auto& t : tokens) {
+        printf("Got token: %s\n", t.c_str());
+    }
+
+    ASSERT_EQ(tokens.size(), 3);
+    ASSERT_EQ(tokens[0], "Test");
+    ASSERT_EQ(tokens[1], "tseT");
+    ASSERT_EQ(tokens[2], "sEtt");
+
+}
+
+TEST(ExtensionsTests, testSplitString_newLines) {
+    const static string STRING_TO_SPLIT(R"(
+        This
+        Contains
+        Newlines
+    )");
+
+    vector<string> tokens;
+    ASSERT_TRUE(borr::extensions::splitString(STRING_TO_SPLIT, "\n", tokens));
+
+    ASSERT_EQ(tokens.size(), 3);
 }
