@@ -9,10 +9,12 @@
  */
 
 #include "borr/language.hpp"
+#include "borr/extensions.hpp"
 
 #include <gtest/gtest.h>
 
 using std::string;
+using std::vector;
 
 class LanguageClassTests: public testing::Test, public borr::language {
     protected:
@@ -74,4 +76,43 @@ TEST_F(LanguageClassTests, testIsTranslation) {
     ASSERT_FALSE(isTranslation("[bla]", field, value));
     ASSERT_FALSE(isTranslation("oinoubiudwbiudbw9b9fb9f3ubpfbpf 3g93 3", field, value));
     ASSERT_FALSE(isTranslation("", field, value));
+}
+
+TEST_F(LanguageClassTests, testIsSection) {
+    const static vector<string> VALID_SECTIONS = {
+        R"([section])",
+        R"([_section])",
+        R"([______section_section_section])",
+    };
+    const static vector<string> INVALID_SECTIONS = {
+        R"(ipogzf6fo)",
+        R"(0987654456)"
+        "\t",
+        "",
+        "    ",
+        "\n",
+        "(test)",
+        "{test}",
+        "[0invalid]",
+        "[1_invalid]",
+        "{_invalid}",
+        "---",
+        R"([SecTi0N]     )",
+
+        R"(    [0987654321234567_hjvuztresxghfcjo6fuvh])"
+    };
+
+    for (const auto& sect : VALID_SECTIONS) {
+        string trimmedSection{};
+        ASSERT_NO_THROW(isSection(sect, trimmedSection));
+        ASSERT_TRUE(isSection(sect, trimmedSection));
+        ASSERT_EQ(trimmedSection, borr::extensions::trim(sect, " []"));
+    }
+
+    for (const auto& sect : INVALID_SECTIONS) {
+        string trimmedSection{};
+        ASSERT_NO_THROW(isSection(sect, trimmedSection));
+        ASSERT_FALSE(isSection(sect, trimmedSection));
+        ASSERT_TRUE(trimmedSection.empty());
+    }
 }
