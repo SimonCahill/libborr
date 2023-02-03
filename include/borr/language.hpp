@@ -45,6 +45,7 @@ namespace borr {
     using dict_t = map<string, sect_t>;
     using translation_t = std::optional<string>;
     using ver_t = langversion;
+    using optstr_t = optional<string>;
 
     #ifndef UNIT_TESTING
     class LanguageClassTests;
@@ -159,8 +160,8 @@ namespace borr {
             static constexpr string_view TRANSLATION_REGEX = R"(^[A-z_][A-z0-9_]+(\[\])?[\s]+?=[\s]+?"([^"]+)?"$)";
 
         public: // +++ Static +++
-            language        fromFile(const fs::directory_entry&); //!< Load a language from disk
-            language        fromString(const string&); //!< Load a pre-loaded language file from memory
+            static language fromFile(const fs::directory_entry&); //!< Load a language from disk
+            static language fromString(const string&); //!< Load a pre-loaded language file from memory
 
         public: // +++ Constructor / Destructor +++
                             language(const language&); //!< Default copy ctor
@@ -168,7 +169,7 @@ namespace borr {
 
         public: // +++ Getters +++
             optsect_t       getSection(const string&) const; //!< Gets a complete translation section. No variables are expanded!
-            string          getString(const string&, const string&, bool expandVariables = true) const; //!< Gets a single translation with optional variable expansion
+            optstr_t        getString(const string&, const string&, bool expandVariables = true) const; //!< Gets a single translation with optional variable expansion
 
             const ver_t&    getLanguageVersion() const { return m_langVer; }
             const string&   getLangId() const { return m_langId; }
