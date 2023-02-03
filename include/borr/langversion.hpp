@@ -28,13 +28,17 @@ namespace borr {
                 size_t nextPeriod = string::npos;
 
                 while ((nextPeriod = verField.find('.', previousPeriod)) != string::npos) {
+                    if (previousPeriod >= verField.length() - 1) { previousPeriod = string::npos; }
+
                     if (outVersion.m_major == string::npos) {
-                        outVersion.m_major = std::stoull(verField.substr(previousPeriod, nextPeriod - 1));
+                        outVersion.m_major = std::stoull(verField.substr(previousPeriod, nextPeriod - previousPeriod));
                     } else if (outVersion.m_minor == string::npos) {
-                        outVersion.m_minor = std::stoull(verField.substr(previousPeriod, nextPeriod - 1));
+                        outVersion.m_minor = std::stoull(verField.substr(previousPeriod, nextPeriod - previousPeriod));
                     } else if (outVersion.m_revision == string::npos) {
-                        outVersion.m_revision = std::stoull(verField.substr(previousPeriod, nextPeriod - 1));
+                        outVersion.m_revision = std::stoull(verField.substr(previousPeriod, nextPeriod - previousPeriod));
                     } else { return; } // fail silently
+
+                    previousPeriod = nextPeriod + 1;
                 }
             }
 
