@@ -50,10 +50,13 @@ namespace borr {
     }
 
     language language::fromString(const string& fContents) {
-        language lang;
-        StringSplit splitter(fContents, "\n");
+        language lang{};
+        StringSplit splitter(fContents, "");
+
+        // printf("splitter returned iterators at %s and %s\n", (*splitter.begin()).data(), (*splitter.end()).data());
 
         for (const auto& line : splitter) {
+            printf("Got line: %s\n", line.data());
             lang.parseLine(line.data());
         }
 
@@ -117,6 +120,15 @@ namespace borr {
         if (iterPos == m_translationDict.end()) { return {}; }
 
         return iterPos->second;
+    }
+
+    optstr_t language::getString(const string& section, const string& field, bool expandVariables /*= true*/) const {
+        const auto sect = getSection(section);
+        if (!sect.has_value()) { return {}; }
+
+        if (sect.value().find(field) == sect.value().end()) { return {}; }
+
+        return {};
     }
 
     string language::expandVariable(const string& varName) const {
