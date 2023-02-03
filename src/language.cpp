@@ -93,7 +93,7 @@ namespace borr {
 
     bool language::isSection(const string& line, string& outSection) const {
         namespace rc = std::regex_constants;
-        if (!std::regex_match(line, regex(SECTION_REGEX.data(), rc::extended | rc::optimize))) { return false; }
+        if (!std::regex_match(extensions::trim(line), regex(SECTION_REGEX.data(), rc::optimize))) { return false; }
 
         outSection = extensions::trim(line, "[]");
         return true;
