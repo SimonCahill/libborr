@@ -17,6 +17,7 @@
 // stl
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <map>
 #include <optional>
 #include <string>
@@ -33,6 +34,7 @@ namespace borr {
 
     namespace fs = std::filesystem;
 
+    using std::function;
     using std::ifstream;
     using std::map;
     using std::optional;
@@ -47,9 +49,8 @@ namespace borr {
     using ver_t = langversion;
     using optstr_t = optional<string>;
 
-    #ifndef UNIT_TESTING
-    class LanguageClassTests;
-    #endif // UNIT_TESTING
+    // callback definitions
+    using varexpansioncallback_t = function
 
     /**
      * @brief The language class - a language manager and file parser.
