@@ -144,6 +144,7 @@ TEST_F(LanguageClassTests, testParseLine_LangVerLine) {
 }
 
 TEST_F(LanguageClassTests, testParseString_validData) {
+    borr::language lang;
     ASSERT_NO_THROW(borr::language::fromString(R"(
         # test translation
 
@@ -155,20 +156,7 @@ TEST_F(LanguageClassTests, testParseString_validData) {
         test_value_0 = "Test01"
         test_value_1[] = "Multi"
         test_value_1[] = "Line"
-    )"));
-
-    const auto lang = borr::language::fromString(R"(
-        # test translation
-
-        lang_id = "test_lang"
-        lang_ver = "1.0.0"
-        lang_desc = "This is a test"
-
-        [test]
-        test_value_0 = "Test01"
-        test_value_1[] = "Multi"
-        test_value_1[] = "Line"
-    )");
+    )", lang));
 
     ASSERT_EQ(lang.getLangDescription(), "This is a test");
     ASSERT_EQ(lang.getLangId(), "test_lang");
