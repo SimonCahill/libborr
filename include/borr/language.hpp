@@ -151,7 +151,7 @@ namespace borr {
             static constexpr string_view LANG_ID_FIELD = "lang_id"; //!< The lang_id field name
             static constexpr string_view LANG_VER_FIELD = "lang_ver"; //!< The lang_ver field name
             static constexpr string_view LANG_DESC_FIELD = "lang_desc"; //!< The lang_desc field name
-            static constexpr string_view VARIABLE_REGEX = R"(\$\{[\s\S]\})"; //!< The regex used to find variables for expansion
+            static constexpr string_view VARIABLE_REGEX = R"(\$\{[A-z_][A-z0-9_]+\})"; //!< The regex used to find variables for expansion
             static constexpr string_view SECTION_REGEX = R"(^\[[A-z_]([A-z_]+)?\]$)"; //!< The regex used to find sections in a file
             static constexpr string_view TRANSLATION_REGEX = R"(^[A-z_][A-z0-9_]+(\[\])?[\s]+?=[\s]+?"([^"]+)?"$)"; //!< The regex used to find translations in a file
 
