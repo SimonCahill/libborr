@@ -117,6 +117,36 @@ TEST_F(LanguageClassTests, testIsSection) {
     }
 }
 
+TEST_F(LanguageClassTests, testContainsVariable) {
+    string varName{};
+    ASSERT_TRUE(containsVariable("${var_name}", varName));
+    ASSERT_EQ(varName, "var_name");
+
+    varName.clear();
+    ASSERT_TRUE(containsVariable("${_Test}", varName));
+    ASSERT_EQ(varName, "_Test");
+
+    varName.clear();
+    ASSERT_TRUE(containsVariable("${TESt}", varName));
+    ASSERT_EQ(varName, "TESt");
+
+    varName.clear();
+    ASSERT_FALSE(containsVariable("${0bla}", varName));
+    ASSERT_TRUE(varName.empty());
+
+    varName.clear();
+    ASSERT_FALSE(containsVariable("{dDWdw}", varName));
+    ASSERT_TRUE(varName.empty());
+
+    varName.clear();
+    ASSERT_FALSE(containsVariable("[öiubub]", varName));
+    ASSERT_TRUE(varName.empty());
+
+    varName.clear();
+    ASSERT_FALSE(containsVariable("${*broken_var}", varName));
+    ASSERT_TRUE(varName.empty());
+}
+
 TEST_F(LanguageClassTests, testParseLineCommentLine) {
     ASSERT_NO_THROW(parseLine("#öbiubzvouvzvouv"));
 }
@@ -166,4 +196,31 @@ TEST_F(LanguageClassTests, testParseString_validData) {
 
     ASSERT_EQ(lang.getString("test", "test_value_0"), "Test01");
     ASSERT_EQ(lang.getString("test", "test_value_1"), "Multi\nLine");
+}
+
+TEST_F(LanguageClassTests, testVariableExpansion) {
+    borr::language lang;
+
+    const auto customExpander = [&](const string&) { return "This is an expansion test"; };
+
+    const auto timeStart = time(nullptr);
+    const auto detailledTimeStart = localtime(&timeStart);
+
+    ASSERT_NO_THROW(borr::language::addVarExpansionCallback("customExpander", customExpander));
+
+    ASSERT_NO_THROW(borr::language::fromString(R"(
+        lang_id = "test_lang"
+        lang_ver = "1.0.0"
+        lang_desc = "This is a test"
+
+        [test]
+        test_01 = "${date}"
+        test_02 = "${time}"
+        test_03 = "The date is ${test_01}"
+        test_04 = "The time is ${test_02}"
+        test_05 = "${customExpander}"
+    )", lang));
+
+    ASSERT_EQ(lang.getString("test", "test_05"), customExpander(""));
+
 }
