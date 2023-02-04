@@ -140,7 +140,7 @@ TEST_F(LanguageClassTests, testParseLine_LangVerLine) {
     const auto& langVer = getLanguageVersion();
     ASSERT_EQ(langVer.getMajorVersion(), 1);
     ASSERT_EQ(langVer.getMinorVersion(), 9);
-    // ASSERT_EQ(langVer.getRevision(), 0); // This is bugged
+    ASSERT_EQ(langVer.getRevision(), 0);
 }
 
 TEST_F(LanguageClassTests, testParseString_validData) {
