@@ -226,7 +226,15 @@ namespace borr {
         const auto sect = getSection(section);
         if (!sect.has_value()) { return {}; }
 
-        if (sect.value().find(field) == sect.value().end()) { return {}; }
+        if (const auto iterPos = sect.value().find(field); iterPos != sect.value().end()) {
+            auto translation = iterPos->second;
+            string varName{};
+            while (containsVariable(translation, varName)) {
+                extensions::stringReplace(translation, "${" + varName + "}", expandVariable(varName));
+            }
+
+            return translation;
+        }
 
         return {};
     }
@@ -323,10 +331,10 @@ namespace borr {
 
         const auto trimmedField = extensions::trim(field, "[]");
 
-        if (section.find(field) != section.end() && isMultilineField(field)) {
-            section[field] = section[field] + "\n" + translation;
+        if (section.find(trimmedField) != section.end() && isMultilineField(field)) {
+            section[trimmedField] = section[trimmedField] + "\n" + translation;
         } else {
-            section.emplace(field, translation);
+            section.emplace(trimmedField, translation);
         }
     }
 
