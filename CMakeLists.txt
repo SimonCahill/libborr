@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(borr VERSION 1.0.0 LANGUAGES CXX DESCRIPTION "Borr; A simple cross-platform C++ language file parser")
+project(borr VERSION 1.0.0 LANGUAGES CXX DESCRIPTION "Borr; A simple cross-platform C++ language file parser" HOMEPAGE_URL "https://github.com/SimonCahill")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(cmake/resources.cmake)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(

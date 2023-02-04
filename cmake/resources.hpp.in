@@ -1,0 +1,36 @@
+/**
+ * @file resources.hpp
+ * @author Simon Cahill (contact@simonc.eu)
+ * @brief Contains resources used by the library.
+ * @version 0.1
+ * @date 2023-02-05
+ * 
+ * @copyright Copyright (c) 2023 Simon Cahill and Contributors.
+ */
+
+#ifndef LIBBORR_INCLUDE_BORR_RESOURCES_HPP
+#define LIBBORR_INCLUDE_BORR_RESOURCES_HPP
+
+#include <string>
+
+/**
+ * @brief Contains compile-time resources for the library.
+ * 
+ * The resources contained within this header are generated at Makefile generation time
+ * and are usable at compile time.
+ */
+namespace borr::resources {
+
+    using std::string;
+
+    inline const string getBorrVersion() { return R"(@PROJECT_VERSION@)"; }
+
+    inline const string getBorrDescrption() { return R"(@PROJECT_DESCRIPTION@)"; }
+
+    inline const string getOperatingSystemName() { return R"(@CMAKE_SYSTEM@)"; }
+
+    inline const string getLibUrl() { return R"(@PROJECT_HOMEPAGE_URL@)"; }
+
+}
+
+#endif // LIBBORR_INCLUDE_BORR_RESOURCES_HPP
