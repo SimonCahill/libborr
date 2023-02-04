@@ -113,7 +113,7 @@ namespace borr {
      */
     bool language::containsVariable(const string& translation, string& outVarName) const {
         namespace rc = std::regex_constants;
-        const static regex VAR_REGEX(VARIABLE_REGEX.data(), rc::optimize | rc::extended);
+        const static regex VAR_REGEX(VARIABLE_REGEX.data(), rc::optimize);
 
         smatch matches;
         if (std::regex_search(translation, matches, VAR_REGEX)) {
