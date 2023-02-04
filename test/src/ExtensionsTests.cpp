@@ -66,10 +66,6 @@ TEST(ExtensionsTests, testSplitString_whitespace) {
     vector<string> tokens;
     ASSERT_TRUE(borr::extensions::splitString(STRING_TO_SPLIT, " ", tokens));
 
-    for (const auto& t : tokens) {
-        printf("Got token: %s\n", t.c_str());
-    }
-
     ASSERT_EQ(tokens.size(), 3);
     ASSERT_EQ(tokens[0], "Test");
     ASSERT_EQ(tokens[1], "tseT");
@@ -85,7 +81,7 @@ TEST(ExtensionsTests, testSplitString_newLines) {
     )");
 
     vector<string> tokens;
-    ASSERT_TRUE(borr::extensions::splitString(STRING_TO_SPLIT, "\n", tokens));
+    ASSERT_TRUE(borr::extensions::splitString(borr::extensions::trim(STRING_TO_SPLIT), "\n", tokens));
 
     ASSERT_EQ(tokens.size(), 3);
 }
