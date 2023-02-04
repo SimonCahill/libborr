@@ -133,7 +133,12 @@ namespace borr {
     }
 
     string language::expandVariable(const string& varName) const {
-        return {};
+        // first check if custom var expanders were set up
+        if (const auto iterPos = _callbackList.find(varName); iterPos != _callbackList.end()) {
+            return iterPos->second(varName);
+        }
+
+        return {}; // TODO: this is wrong!
     }
 
     string language::removeInlineComments(const string& line) const {
