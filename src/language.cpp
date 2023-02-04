@@ -39,6 +39,10 @@ namespace borr {
 
     varcbacklist_t language::_callbackList = {}; //!< Initialise private static member
 
+    varcbacklist_t language::_defaultExpandersList = {
+        { "date", [](const string&) {  } },
+    };
+
     /**
      * @brief Parses a borrfile and ensures its contents are parsed into the given object reference.
      * 
@@ -349,5 +353,32 @@ namespace borr {
         if (iterPos == _callbackList.end()) { return; } // fail silently
         _callbackList.erase(iterPos);
     }
+
+    #pragma region "Default Expanders"
+    string language::dateExpander(const string&) const {
+
+    }
+    
+    string language::timeExpander(const string&) const {
+
+    }
+    
+    string language::libExpander(const string&) const {
+
+    }
+    
+    string language::osExpander(const string&) const {
+
+    }
+    
+    string language::osverExpander(const string&) const {
+
+    }
+    
+    string language::liburlExpander(const string&) const {
+
+    }
+    
+    #pragma endregion
 
 }
