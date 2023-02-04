@@ -194,6 +194,17 @@ namespace borr {
 
             virtual string  expandVariable(const string&) const; //!< Expands a given variable.
 
+        protected: // +++ Default expanders +++
+            virtual string  dateExpander(const string&) const; //!< Expands the "date" variable
+            virtual string  timeExpander(const string&) const; //!< Expands the "time" variable
+            virtual string  libExpander(const string&) const; //!< Expands the "lib" variable
+            virtual string  osExpander(const string&) const; //!< Expands the "os" variable
+            virtual string  osverExpander(const string&) const; //!< Expands the "osver" variable
+            virtual string  liburlExpander(const string&) const; //!< Expands the "liburl" variable
+
+        protected: // +++ Inheritable members +++
+            static varcbacklist_t _defaultExpandersList; //!< The list of default expanders provided by the lib
+
         private:
             dict_t          m_translationDict; //!< The translation dictionary containing sections and translations
 
