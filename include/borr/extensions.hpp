@@ -39,9 +39,14 @@ namespace borr::extensions {
         // Find first "non-delimiter".
         size_t pos = str.find_first_of(delimiters, lastPos);
 
-        while ((string::npos != pos || string::npos != lastPos) && maxLen < outTokens.size()) {
-            // Found a token, add it to the vector.
-            outTokens.push_back(str.substr(lastPos, pos - lastPos));
+        while ((string::npos != pos || string::npos != lastPos) && maxLen > outTokens.size()) {
+            const auto token = str.substr(lastPos, pos - lastPos);
+
+            if (!token.empty()) {
+                // Found a token, add it to the vector.
+                outTokens.push_back(token);
+            }
+
             // Skip delimiters.
             lastPos = string::npos == pos ? string::npos : pos + 1;
             // Find next "non-delimiter"
