@@ -37,6 +37,8 @@ namespace borr {
     using std::smatch;
     using std::vector;
 
+    varcbacklist_t language::_callbackList = {}; //!< Initialise private static member
+
     void language::fromFile(const fs::directory_entry& file, language& outLang) {
         if (!file.exists() || !file.is_regular_file()) {
             throw fs::filesystem_error("Invalid file path given!", file.path(), error_code(EINVAL, std::generic_category()));
@@ -63,15 +65,14 @@ namespace borr {
         }
     }
 
-    language::language(): m_langDescription({}), m_langId({}), m_langVer(), m_translationDict({}) {
-    }
+    language::language():
+        m_langDescription({}), m_langId({}),
+        m_langVer(), m_translationDict({})
+        { }
 
-    // language::language(const language& instance):
-    //     m_langDescription(instance.m_langDescription),
-    //     m_langId(instance.m_langId),
-    //     m_langVer(instance.m_langVer),
-    //     m_translationDict(instance.m_translationDict) {
-    // }
+    bool language::addVarExpansionCallback(const string& varName, const varexpansioncallback_t& cb) {
+        return _callbackList.try_emplace(varName, static_cast<varexpansioncallback_t>(cb)).second;
+    }
 
     bool language::containsVariable(const string& translation, string& outVarName) const {
         namespace rc = std::regex_constants;
@@ -197,6 +198,13 @@ namespace borr {
         } else {
             section.emplace(field, translation);
         }
+    }
+
+    void language::removeVarExpansionCallback(const string& varName) {
+        const auto iterPos = _callbackList.find(varName);
+
+        if (iterPos == _callbackList.end()) { return; } // fail silently
+        _callbackList.erase(iterPos);
     }
 
 }
