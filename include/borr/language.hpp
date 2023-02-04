@@ -17,6 +17,7 @@
 // stl
 #include <filesystem>
 #include <fstream>
+#include <functional>
 #include <map>
 #include <optional>
 #include <string>
@@ -33,6 +34,7 @@ namespace borr {
 
     namespace fs = std::filesystem;
 
+    using std::function;
     using std::ifstream;
     using std::map;
     using std::optional;
@@ -47,9 +49,9 @@ namespace borr {
     using ver_t = langversion;
     using optstr_t = optional<string>;
 
-    #ifndef UNIT_TESTING
-    class LanguageClassTests;
-    #endif // UNIT_TESTING
+    // callback definitions
+    using varexpansioncallback_t = function<string(const string&)>;
+    using varcbacklist_t = map<string, varexpansioncallback_t>;
 
     /**
      * @brief The language class - a language manager and file parser.
@@ -175,6 +177,10 @@ namespace borr {
             const string&   getLangId() const { return m_langId; }
             const string&   getLangDescription() const { return m_langDescription; }
 
+        public: // +++ Callback Management +++
+            static bool     addVarExpansionCallback(const string& varName, const varexpansioncallback_t& cb);
+            static void     removeVarExpansionCallback(const string& varName);
+
         public: // +++ Constructor ++
             language(); //!< Protected default ctor
 
@@ -201,6 +207,9 @@ namespace borr {
 
             string          m_langId; //!< The language's ID (region_COUNTRY)
             string          m_langDescription; //!< The language's description
+
+        private: // +++ Static +++
+            static varcbacklist_t  _callbackList; //!< The list of callbacks for variable expansion
     };
 
 }
