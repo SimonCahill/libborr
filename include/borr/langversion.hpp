@@ -27,6 +27,12 @@ namespace borr {
      */
     class langversion {
         public: // +++ Static +++
+            /**
+             * @brief Emplaces all values from a given string.
+             * 
+             * @param verField The translation field from which to retrieve the values.
+             * @param outVersion Out parameter containing the updated version.
+             */
             static void fromString(const string& verField, langversion& outVersion) {
                 vector<string> versionTokens{};
                 if (!extensions::splitString(verField, ".", versionTokens, 3)) {
