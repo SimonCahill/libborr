@@ -160,4 +160,10 @@ TEST_F(LanguageClassTests, testParseString_validData) {
 
     ASSERT_EQ(lang.getLangDescription(), "This is a test");
     ASSERT_EQ(lang.getLangId(), "test_lang");
+    ASSERT_EQ(lang.getLanguageVersion().getMajorVersion(), 1);
+    ASSERT_EQ(lang.getLanguageVersion().getMinorVersion(), 0);
+    ASSERT_EQ(lang.getLanguageVersion().getRevision(), 0);
+
+    ASSERT_EQ(lang.getString("test", "test_value_0"), "Test01");
+    ASSERT_EQ(lang.getString("test", "test_value_1"), "Multi\nLine");
 }
