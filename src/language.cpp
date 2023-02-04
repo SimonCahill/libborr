@@ -35,8 +35,9 @@ namespace borr {
     using std::regex;
     using std::regex_replace;
     using std::smatch;
+    using std::vector;
 
-    language language::fromFile(const fs::directory_entry& file) {
+    void language::fromFile(const fs::directory_entry& file, language& outLang) {
         if (!file.exists() || !file.is_regular_file()) {
             throw fs::filesystem_error("Invalid file path given!", file.path(), error_code(EINVAL, std::generic_category()));
         }
@@ -46,32 +47,31 @@ namespace borr {
 
         inStream >> fContents;
 
-        return fromString(fContents);
+        fromString(fContents, outLang);
     }
 
-    language language::fromString(const string& fContents) {
-        language lang{};
-        StringSplit splitter(fContents, "");
-
-        // printf("splitter returned iterators at %s and %s\n", (*splitter.begin()).data(), (*splitter.end()).data());
-
-        for (const auto& line : splitter) {
-            printf("Got line: %s\n", line.data());
-            lang.parseLine(line.data());
+    void language::fromString(const string& fContents, language& outLang) {
+        vector<string> tokens;
+        if (!extensions::splitString(fContents, "\n", tokens)) {
+            throw std::runtime_error("Failed to split input string! Are newlines missing?");
         }
 
-        return lang;
+        outLang.clear();
+
+        for (const auto& line : tokens) {
+            outLang.parseLine(line);
+        }
     }
 
     language::language(): m_langDescription({}), m_langId({}), m_langVer(), m_translationDict({}) {
     }
 
-    language::language(const language& instance):
-        m_langDescription(instance.m_langDescription),
-        m_langId(instance.m_langId),
-        m_langVer(instance.m_langVer),
-        m_translationDict(instance.m_translationDict) {
-    }
+    // language::language(const language& instance):
+    //     m_langDescription(instance.m_langDescription),
+    //     m_langId(instance.m_langId),
+    //     m_langVer(instance.m_langVer),
+    //     m_translationDict(instance.m_translationDict) {
+    // }
 
     bool language::containsVariable(const string& translation, string& outVarName) const {
         namespace rc = std::regex_constants;
@@ -148,6 +148,13 @@ namespace borr {
         }
 
         return extensions::trim(copy);
+    }
+
+    void language::clear() {
+        m_langDescription = {};
+        m_langId = {};
+        m_langVer = {};
+        m_translationDict.clear();
     }
 
     void language::parseLine(const string& line) {

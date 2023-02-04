@@ -160,11 +160,11 @@ namespace borr {
             static constexpr string_view TRANSLATION_REGEX = R"(^[A-z_][A-z0-9_]+(\[\])?[\s]+?=[\s]+?"([^"]+)?"$)";
 
         public: // +++ Static +++
-            static language fromFile(const fs::directory_entry&); //!< Load a language from disk
-            static language fromString(const string&); //!< Load a pre-loaded language file from memory
+            static void fromFile(const fs::directory_entry&, language&); //!< Load a language from disk
+            static void fromString(const string&, language&); //!< Load a pre-loaded language file from memory
 
         public: // +++ Constructor / Destructor +++
-                            language(const language&); //!< Default copy ctor
+                            // language(const language&) = default; //!< Default copy ctor
             ~               language() = default; //!< Default dtor
 
         public: // +++ Getters +++
@@ -175,7 +175,7 @@ namespace borr {
             const string&   getLangId() const { return m_langId; }
             const string&   getLangDescription() const { return m_langDescription; }
 
-        protected: // +++ Constructor ++
+        public: // +++ Constructor ++
             language(); //!< Protected default ctor
 
         protected: // +++ Actual Parsing +++
@@ -186,6 +186,7 @@ namespace borr {
 
             virtual string  removeInlineComments(const string&) const;
 
+            virtual void    clear();
             virtual void    parseLine(const string&);
 
         protected: // +++ Translation retrieval +++
