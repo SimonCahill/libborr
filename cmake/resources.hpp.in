@@ -25,7 +25,7 @@ namespace borr::resources {
 
     inline const string getBorrVersion() { return R"(@PROJECT_VERSION@)"; }
 
-    inline const string getBorrDescrption() { return R"(@PROJECT_DESCRIPTION@)"; }
+    inline const string getBorrDescription() { return R"(@PROJECT_DESCRIPTION@)"; }
 
     inline const string getOperatingSystemName() { return R"(@CMAKE_SYSTEM@)"; }
 
