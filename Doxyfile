@@ -122,7 +122,13 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = src/*.cpp include/ README.md
+INPUT                  =    src/language.cpp \
+                            include/borr/extensions.hpp \
+                            include/borr/langversion.hpp \
+                            include/borr/language.hpp \
+                            include/borr/string_splitter.hpp \
+                            README.md \
+                            reference/src/Main.cpp
 INPUT_ENCODING         = UTF-8
 INPUT_FILE_ENCODING    =
 FILE_PATTERNS          = *.c \
