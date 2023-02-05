@@ -51,3 +51,7 @@ add_custom_command(
 if (borr_BUILD_TESTS)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test ${CMAKE_CURRENT_BINARY_DIR}/borrtests)
 endif()
+
+if (borr_BUILD_REFERENCE)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/reference ${CMAKE_CURRENT_BINARY_DIR}/borrreference)
+endif()
