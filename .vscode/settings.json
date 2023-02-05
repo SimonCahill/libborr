@@ -4,6 +4,7 @@
         "filesystem": "cpp",
         "string": "cpp",
         "iosfwd": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "format": "cpp"
     }
 }
