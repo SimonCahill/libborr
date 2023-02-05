@@ -151,7 +151,7 @@ namespace borr {
             static constexpr string_view LANG_ID_FIELD = "lang_id"; //!< The lang_id field name
             static constexpr string_view LANG_VER_FIELD = "lang_ver"; //!< The lang_ver field name
             static constexpr string_view LANG_DESC_FIELD = "lang_desc"; //!< The lang_desc field name
-            static constexpr string_view VARIABLE_REGEX = R"(\$\{[\s\S]\})"; //!< The regex used to find variables for expansion
+            static constexpr string_view VARIABLE_REGEX = R"(\$\{([A-z_]([A-z_]+):?)[A-z_][A-z0-9_]+\})"; //!< The regex used to find variables for expansion
             static constexpr string_view SECTION_REGEX = R"(^\[[A-z_]([A-z_]+)?\]$)"; //!< The regex used to find sections in a file
             static constexpr string_view TRANSLATION_REGEX = R"(^[A-z_][A-z0-9_]+(\[\])?[\s]+?=[\s]+?"([^"]+)?"$)"; //!< The regex used to find translations in a file
 
@@ -193,6 +193,16 @@ namespace borr {
             virtual bool    containsVariable(const string&, string& outVarName) const; //!< Determines whether or not a translation contains a variable
 
             virtual string  expandVariable(const string&) const; //!< Expands a given variable.
+
+        protected: // +++ Default expanders +++
+            static string   dateExpander(const string&); //!< Expands the "date" variable
+            static string   timeExpander(const string&); //!< Expands the "time" variable
+            static string   libExpander(const string&); //!< Expands the "lib" variable
+            static string   osExpander(const string&); //!< Expands the "os" variable
+            static string   liburlExpander(const string&); //!< Expands the "liburl" variable
+
+        protected: // +++ Inheritable members +++
+            static varcbacklist_t _defaultExpandersList; //!< The list of default expanders provided by the lib
 
         private:
             dict_t          m_translationDict; //!< The translation dictionary containing sections and translations

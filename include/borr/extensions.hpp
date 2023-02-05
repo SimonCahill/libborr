@@ -57,6 +57,25 @@ namespace borr::extensions {
     }
 
     /**
+     * @brief Replaces the first instance of needle with the replacement value in the haystack.
+     *
+     * @param haystack A reference to a string variable in which to search for the needle.
+     * @param needle The needle to search for in the haystack.
+     * @param replacement The replacement value for the needle.
+     *
+     * @return @code true @endcode if the needle was replaced.
+     */
+    inline bool stringReplace(string& haystack, const string& needle, const string& replacement) {
+        auto firstPosition = haystack.find(needle);
+
+        // Return false if no needle was found
+        if (firstPosition == string::npos) { return false; }
+
+        haystack.replace(firstPosition, needle.length(), replacement);
+        return true;
+    }
+
+    /**
      * @brief Trims the beginning of a given string.
      *
      * @param nonTrimmed The non-trimmed string.

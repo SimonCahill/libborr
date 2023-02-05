@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "map": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "string": "cpp",
+        "iosfwd": "cpp",
+        "string_view": "cpp",
+        "format": "cpp"
     }
 }
