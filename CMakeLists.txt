@@ -19,6 +19,7 @@ endif()
 
 include_directories(
     include/
+    ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 file(GLOB_RECURSE FILES FOLLOW_SYMLINKS ${CMAKE_CURRENT_SOURCE_DIR} src/*.cpp)
