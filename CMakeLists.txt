@@ -36,6 +36,8 @@ target_link_libraries(
     # add potential dependencies here
 )
 
+target_include_directories(${PROJECT_NAME} PUBLIC include/ ${CMAKE_CURRENT_BINARY_DIR}/include)
+
 ###
 # Docs target
 ###
