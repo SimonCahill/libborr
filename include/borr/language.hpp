@@ -151,7 +151,7 @@ namespace borr {
             static constexpr string_view LANG_ID_FIELD = "lang_id"; //!< The lang_id field name
             static constexpr string_view LANG_VER_FIELD = "lang_ver"; //!< The lang_ver field name
             static constexpr string_view LANG_DESC_FIELD = "lang_desc"; //!< The lang_desc field name
-            static constexpr string_view VARIABLE_REGEX = R"(\$\{[A-z_][A-z0-9_]+\})"; //!< The regex used to find variables for expansion
+            static constexpr string_view VARIABLE_REGEX = R"(\$\{([A-z_]([A-z_]+):?)[A-z_][A-z0-9_]+\})"; //!< The regex used to find variables for expansion
             static constexpr string_view SECTION_REGEX = R"(^\[[A-z_]([A-z_]+)?\]$)"; //!< The regex used to find sections in a file
             static constexpr string_view TRANSLATION_REGEX = R"(^[A-z_][A-z0-9_]+(\[\])?[\s]+?=[\s]+?"([^"]+)?"$)"; //!< The regex used to find translations in a file
 
@@ -195,12 +195,11 @@ namespace borr {
             virtual string  expandVariable(const string&) const; //!< Expands a given variable.
 
         protected: // +++ Default expanders +++
-            virtual string  dateExpander(const string&) const; //!< Expands the "date" variable
-            virtual string  timeExpander(const string&) const; //!< Expands the "time" variable
-            virtual string  libExpander(const string&) const; //!< Expands the "lib" variable
-            virtual string  osExpander(const string&) const; //!< Expands the "os" variable
-            virtual string  osverExpander(const string&) const; //!< Expands the "osver" variable
-            virtual string  liburlExpander(const string&) const; //!< Expands the "liburl" variable
+            static string   dateExpander(const string&); //!< Expands the "date" variable
+            static string   timeExpander(const string&); //!< Expands the "time" variable
+            static string   libExpander(const string&); //!< Expands the "lib" variable
+            static string   osExpander(const string&); //!< Expands the "os" variable
+            static string   liburlExpander(const string&); //!< Expands the "liburl" variable
 
         protected: // +++ Inheritable members +++
             static varcbacklist_t _defaultExpandersList; //!< The list of default expanders provided by the lib
