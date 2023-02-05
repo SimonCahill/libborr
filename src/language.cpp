@@ -12,11 +12,14 @@
 // SYSTEM INCLUDES //
 /////////////////////
 // stl
+#include <chrono>
+#include <format>
 #include <filesystem>
 #include <fstream>
 #include <map>
 #include <optional>
 #include <regex>
+#include <sstream>
 #include <string>
 
 /////////////////////
@@ -25,6 +28,7 @@
 #include "borr/extensions.hpp"
 #include "borr/language.hpp"
 #include "borr/langversion.hpp"
+#include "borr/resources.hpp"
 #include "borr/string_splitter.hpp"
 
 namespace borr {
@@ -35,12 +39,17 @@ namespace borr {
     using std::regex;
     using std::regex_replace;
     using std::smatch;
+    using std::stringstream;
     using std::vector;
 
     varcbacklist_t language::_callbackList = {}; //!< Initialise private static member
 
     varcbacklist_t language::_defaultExpandersList = {
-        { "date", [](const string&) {  } },
+        { "date", dateExpander },
+        { "time", timeExpander },
+        { "lib", libExpander },
+        { "os", osExpander },
+        { "liburl", liburlExpander },
     };
 
     /**
@@ -260,7 +269,20 @@ namespace borr {
             return iterPos->second(varName);
         }
 
-        return {}; // TODO: this is wrong!
+        if (const auto iterPos = _defaultExpandersList.find(varName); iterPos != _defaultExpandersList.end()) {
+            const auto value = iterPos->second(varName);
+            return value;
+        }
+
+        // now check if the variable references a different translation
+        if (const auto iterPos = varName.find(':'); iterPos != string::npos) {
+            vector<string> tokens;
+            if (!extensions::splitString(varName, ":", tokens, 2) || tokens.size() != 2) { return {}; }
+
+            return getString(tokens[0], tokens[1]).value_or("");
+        }
+
+        return {};
     }
 
     /**
@@ -355,30 +377,71 @@ namespace borr {
     }
 
     #pragma region "Default Expanders"
-    string language::dateExpander(const string&) const {
+    /**
+     * @brief Expands "date" to the current (local) date.
+     * 
+     * @remarks This needs to be changed to a pure C++ system once std::format is widely available on macOS/clang.
+     * At this current point in time, std::format() is experimental in clang C++14.
+     * 
+     * @return string The current (local) date as "Y-m-d".
+     */
+    string language::dateExpander(const string&) {
+        const auto timeNow = time(nullptr);
+        tm* localTime = localtime(&timeNow);
 
-    }
-    
-    string language::timeExpander(const string&) const {
+        stringstream sStream;
+        sStream << (localTime->tm_year + 1900) << "-" << localTime->tm_mon << "-" << localTime->tm_mday;
 
+        return sStream.str();
     }
-    
-    string language::libExpander(const string&) const {
 
-    }
-    
-    string language::osExpander(const string&) const {
+    /**
+     * @brief Expands the "time" variable to the current (local) time.
+     * 
+     * @remarks
+     * This needs to be changed to a pure C++ system once std::format is widely available on macOS/clang.
+     * 
+     * @return string The current (local) time as "hh:MM:ss".
+     */
+    string language::timeExpander(const string&) {
+        const auto timeNow = time(nullptr);
+        tm* localTime = localtime(&timeNow);
 
-    }
-    
-    string language::osverExpander(const string&) const {
+        stringstream sStream;
+        sStream << localTime->tm_hour << ":" << localTime->tm_min << ":" << localTime->tm_sec;
 
+        return sStream.str();
     }
-    
-    string language::liburlExpander(const string&) const {
 
+    /**
+     * @brief Expands the "lib" variable.
+     * 
+     * @return string The name of the library used.
+     */
+    string language::libExpander(const string&) {
+        return resources::getBorrDescription() + " v" + resources::getBorrVersion();
     }
-    
+
+    /**
+     * @brief Expands the OS variable.
+     * 
+     * @remarks The variable expansion is determined at compile time.
+     * 
+     * @return string The name of the current OS.
+     */
+    string language::osExpander(const string&) {
+        return resources::getOperatingSystemName();
+    }
+
+    /**
+     * @brief Expands the "liburl" variable.
+     * 
+     * @return string The URL to the repository of the library.
+     */
+    string language::liburlExpander(const string&) {
+        return resources::getLibUrl();
+    }
+
     #pragma endregion
 
 }
