@@ -64,11 +64,11 @@ namespace borr {
         }
 
         ifstream inStream(file.path());
-        string fContents{};
+        stringstream fContents{};
 
-        inStream >> fContents;
+        fContents << inStream.rdbuf();
 
-        fromString(fContents, outLang);
+        fromString(fContents.str(), outLang);
     }
 
     /**

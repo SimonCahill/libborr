@@ -1,0 +1,21 @@
+##################################################
+##  Test language file for the reference impl   ##
+##  of libborr.                                 ##
+##  © Simon Cahill and Contributors.            ##
+##################################################
+
+## required for parsing
+lang_id = "de_DE"
+lang_ver = "1.0.0"
+lang_desc = "Eine einfache Testdatei um die Verwendung von libborr zu demonstrieren."
+
+[variables_tests]
+date_time_var_test      = "Das Datum und die Uhrzeit sind bei Ausführung: ${date} ${time}"
+lib_var_test[]          = "Die verwendete Bibliothek um diese Datei zu parsen ist ${lib} ${libver} für ${os}!"
+lib_var_test[]          = "Mehr Informationen zu dieser Bibliothek unter ${liburl}!"
+
+[normal_tests]
+copyright_info[]        = "Diese Bibliothek und Beispiel-Implementierung wurden durch Simon Cahill geschrieben."
+copyright_info[]        = "© All Rechte reserviert Simon Cahill und Beitragende."
+copyright_info[]        = "Dieses Projekt und alle mitgelieferten Dateien sind unter der"
+copyright_info[]        = "Apache License 2.0 lizensiert."
