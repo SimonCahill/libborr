@@ -131,6 +131,10 @@ TEST_F(LanguageClassTests, testContainsVariable) {
     ASSERT_EQ(varName, "TESt");
 
     varName.clear();
+    ASSERT_TRUE(containsVariable("${test:test_01}", varName));
+    ASSERT_EQ(varName, "test:test_01");
+
+    varName.clear();
     ASSERT_FALSE(containsVariable("${0bla}", varName));
     ASSERT_TRUE(varName.empty());
 
@@ -216,11 +220,15 @@ TEST_F(LanguageClassTests, testVariableExpansion) {
         [test]
         test_01 = "${date}"
         test_02 = "${time}"
-        test_03 = "The date is ${test_01}"
-        test_04 = "The time is ${test_02}"
+        test_03 = "The date is ${test:test_01}"
+        test_04 = "The time is ${test:test_02}"
         test_05 = "${customExpander}"
     )", lang));
 
     ASSERT_EQ(lang.getString("test", "test_05"), customExpander(""));
+    ASSERT_EQ(lang.getString("test", "test_01"), dateExpander(""));
+    ASSERT_EQ(lang.getString("test", "test_02"), timeExpander(""));
+    ASSERT_EQ(lang.getString("test", "test_03"), "The date is " + dateExpander(""));
+    ASSERT_EQ(lang.getString("test", "test_04"), "The time is " + timeExpander(""));
 
 }
