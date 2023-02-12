@@ -140,10 +140,11 @@ namespace borr {
     /**
      * @brief Determines whether a line is empty or is commented out.
      * 
-     * @example
-     * 
+     *
+     * @code 
      * # this would count as an empty line
      * [section] # this does not
+     * @endcode
      * 
      * @param line The line to check.
      * 
