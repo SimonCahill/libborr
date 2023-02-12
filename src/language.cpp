@@ -295,7 +295,7 @@ namespace borr {
      */
     string language::removeInlineComments(const string& line) const {
         namespace rc = std::regex_constants;
-        static const regex COMMENT_REGEX = regex(R"(#[^\n]+$)", rc::optimize);
+        static const regex COMMENT_REGEX = regex(R"(#[^\n]+[^"]$)", rc::optimize);
 
         string copy = line;
         smatch matches;
