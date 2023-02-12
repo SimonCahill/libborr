@@ -45,11 +45,13 @@ TEST_F(LanguageClassTests, testRemoveInlineComments) {
     const static string SECTION_WITH_COMMENT_2 = R"([section]#comment)";
     const static string TRANSLATION_WITH_COMMENT = R"(translation = "" # comment)";
     const static string TRANSLATION_WITH_COMMENT_2 = R"(translation[] = ""#COMMENTS ARE WEIRD)";
+    const static string TRANSLATION_WITH_INTERNAL_COMMENT = R"(translation = "this # shouldn't match")";
 
     ASSERT_EQ(removeInlineComments(SECTION_WITH_COMMENT), R"([section])");
     ASSERT_EQ(removeInlineComments(SECTION_WITH_COMMENT_2), R"([section])");
     ASSERT_EQ(removeInlineComments(TRANSLATION_WITH_COMMENT), R"(translation = "")");
     ASSERT_EQ(removeInlineComments(TRANSLATION_WITH_COMMENT_2), R"(translation[] = "")");
+    ASSERT_EQ(removeInlineComments(TRANSLATION_WITH_INTERNAL_COMMENT), TRANSLATION_WITH_INTERNAL_COMMENT);
 }
 
 TEST_F(LanguageClassTests, testIsMultilineField) {
