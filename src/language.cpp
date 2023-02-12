@@ -140,10 +140,11 @@ namespace borr {
     /**
      * @brief Determines whether a line is empty or is commented out.
      * 
-     * @example
-     * 
+     *
+     * @code 
      * # this would count as an empty line
      * [section] # this does not
+     * @endcode
      * 
      * @param line The line to check.
      * 
@@ -294,7 +295,7 @@ namespace borr {
      */
     string language::removeInlineComments(const string& line) const {
         namespace rc = std::regex_constants;
-        static const regex COMMENT_REGEX = regex(R"(#[^\n]+$)", rc::optimize);
+        static const regex COMMENT_REGEX = regex(R"(#[^\n]+[^"]$)", rc::optimize);
 
         string copy = line;
         smatch matches;
