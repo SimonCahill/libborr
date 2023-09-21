@@ -13,7 +13,11 @@
 /////////////////////
 // stl
 #include <chrono>
-#include <format>
+#if __cpp_lib_format >= 201907L
+#   include <format>
+#else
+#   include <fmt/format.h>
+#endif
 #include <filesystem>
 #include <fstream>
 #include <map>
