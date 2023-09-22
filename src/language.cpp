@@ -60,9 +60,8 @@ namespace borr {
      * @brief Parses a borrfile and ensures its contents are parsed into the given object reference.
      * 
      * @param file The file to parse.
-     * @param outLang A reference to the language instance into which the file should be parsed.
      */
-    void language::fromFile(const fs::directory_entry& file, language& outLang) {
+    language language::fromFile(const fs::directory_entry& file) {
         if (!file.exists() || !file.is_regular_file()) {
             throw fs::filesystem_error("Invalid file path given!", file.path(), error_code(EINVAL, std::generic_category()));
         }
@@ -72,18 +71,18 @@ namespace borr {
 
         fContents << inStream.rdbuf();
 
-        fromString(fContents.str(), outLang);
+        return fromString(fContents.str());
     }
 
     /**
      * @brief Parses a string object into a language instance.
      * 
      * @param fContents The string (file contents) to parse.
-     * @param outLang A reference to the language object into which the string should be parsed.
      * 
      * @throws runtime_error If an error occurred. TODO: Custom exceptions.
      */
-    void language::fromString(const string& fContents, language& outLang) {
+    language language::fromString(const string& fContents) {
+        language outLang{};
         vector<string> tokens;
         if (!extensions::splitString(fContents, "\n", tokens)) {
             throw std::runtime_error("Failed to split input string! Are newlines missing?");
@@ -94,6 +93,8 @@ namespace borr {
         for (const auto& line : tokens) {
             outLang.parseLine(line);
         }
+
+        return outLang;
     }
 
     /**

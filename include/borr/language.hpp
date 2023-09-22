@@ -156,11 +156,11 @@ namespace borr {
             static constexpr string_view TRANSLATION_REGEX = R"(^[A-z_][A-z0-9_]+(\[\])?[\s]+?=[\s]+?"([^"]+)?"$)"; //!< The regex used to find translations in a file
 
         public: // +++ Static +++
-            static void fromFile(const fs::directory_entry&, language&); //!< Load a language from disk
-            static void fromString(const string&, language&); //!< Load a pre-loaded language file from memory
+            static language fromFile(const fs::directory_entry&); //!< Load a language from disk
+            static language fromString(const string&); //!< Load a pre-loaded language file from memory
 
         public: // +++ Constructor / Destructor +++
-                            // language(const language&) = default; //!< Default copy ctor
+                            language(language&&) = default; //!< Default move ctor
             ~               language() = default; //!< Default dtor
 
         public: // +++ Getters +++
@@ -176,7 +176,7 @@ namespace borr {
             static void     removeVarExpansionCallback(const string& varName); //!< Removes the variable expander for a given variable name
 
         public: // +++ Constructor ++
-            language(); //!< Protected default ctor
+                            language(); //!< Protected default ctor
 
         protected: // +++ Actual Parsing +++
             virtual bool    isEmptyOrComment(const string&) const; //!< Determines whether or not the current line is empty or a comment so it can be ignored.
