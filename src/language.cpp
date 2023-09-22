@@ -100,10 +100,7 @@ namespace borr {
     /**
      * @brief Default constructor.
      */
-    language::language():
-        m_langDescription({}), m_langId({}),
-        m_langVer(), m_translationDict({})
-        { }
+    language::language() { }
 
     /**
      * @brief Allows a user to add custom variable expansion callbacks.
@@ -320,6 +317,7 @@ namespace borr {
         m_langDescription = {};
         m_langId = {};
         m_langVer = {};
+        m_currentSection = {};
         m_translationDict.clear();
     }
 
@@ -334,32 +332,34 @@ namespace borr {
         // now search for inline comments
         const auto commentlessLine = removeInlineComments(line);
 
-        static string currentSection{};
-        if (isSection(commentlessLine, currentSection)) { return; } // nothing more to do here
+        if (isSection(commentlessLine, m_currentSection)) { return; } // nothing more to do here
 
         string field;
         string translation;
         if (!isTranslation(commentlessLine, field, translation)) { return; } // nothing more to do here
 
-        if (currentSection.empty()) {
+        if (m_currentSection.empty()) {
             if (field == LANG_DESC_FIELD) {
+                printf("Found LANG_DESC_FIELD\n");
                 m_langDescription = translation;
                 return;
             } else if (field == LANG_ID_FIELD) {
+                printf("Found LANG_ID_FIELD\n");
                 m_langId = translation;
                 return;
             } else if (field == LANG_VER_FIELD) {
+                printf("Found LANG_VER_FIELD\n");
                 langversion::fromString(translation, m_langVer);
                 return;
             }
             return;
         }
 
-        if (!getSection(currentSection).has_value()) {
-            m_translationDict.emplace(currentSection, sect_t{});
+        if (!getSection(m_currentSection).has_value()) {
+            m_translationDict.emplace(m_currentSection, sect_t{});
         }
 
-        auto& section = m_translationDict[currentSection];
+        auto& section = m_translationDict[m_currentSection];
 
         const auto trimmedField = extensions::trim(field, "[]");
 

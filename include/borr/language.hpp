@@ -205,12 +205,13 @@ namespace borr {
             static varcbacklist_t _defaultExpandersList; //!< The list of default expanders provided by the lib
 
         private:
-            dict_t          m_translationDict; //!< The translation dictionary containing sections and translations
+            dict_t          m_translationDict{}; //!< The translation dictionary containing sections and translations
 
-            langversion     m_langVer; //!< The language file's version
+            langversion     m_langVer{}; //!< The language file's version
 
-            string          m_langId; //!< The language's ID (region_COUNTRY)
-            string          m_langDescription; //!< The language's description
+            string          m_currentSection{}; //!< The current section the parser is at
+            string          m_langId{}; //!< The language's ID (region_COUNTRY)
+            string          m_langDescription{}; //!< The language's description
 
         private: // +++ Static +++
             static varcbacklist_t  _callbackList; //!< The list of callbacks for variable expansion
