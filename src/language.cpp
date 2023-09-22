@@ -60,9 +60,8 @@ namespace borr {
      * @brief Parses a borrfile and ensures its contents are parsed into the given object reference.
      * 
      * @param file The file to parse.
-     * @param outLang A reference to the language instance into which the file should be parsed.
      */
-    void language::fromFile(const fs::directory_entry& file, language& outLang) {
+    language language::fromFile(const fs::directory_entry& file) {
         if (!file.exists() || !file.is_regular_file()) {
             throw fs::filesystem_error("Invalid file path given!", file.path(), error_code(EINVAL, std::generic_category()));
         }
@@ -72,18 +71,18 @@ namespace borr {
 
         fContents << inStream.rdbuf();
 
-        fromString(fContents.str(), outLang);
+        return fromString(fContents.str());
     }
 
     /**
      * @brief Parses a string object into a language instance.
      * 
      * @param fContents The string (file contents) to parse.
-     * @param outLang A reference to the language object into which the string should be parsed.
      * 
      * @throws runtime_error If an error occurred. TODO: Custom exceptions.
      */
-    void language::fromString(const string& fContents, language& outLang) {
+    language language::fromString(const string& fContents) {
+        language outLang{};
         vector<string> tokens;
         if (!extensions::splitString(fContents, "\n", tokens)) {
             throw std::runtime_error("Failed to split input string! Are newlines missing?");
@@ -94,15 +93,14 @@ namespace borr {
         for (const auto& line : tokens) {
             outLang.parseLine(line);
         }
+
+        return outLang;
     }
 
     /**
      * @brief Default constructor.
      */
-    language::language():
-        m_langDescription({}), m_langId({}),
-        m_langVer(), m_translationDict({})
-        { }
+    language::language() { }
 
     /**
      * @brief Allows a user to add custom variable expansion callbacks.
@@ -319,6 +317,7 @@ namespace borr {
         m_langDescription = {};
         m_langId = {};
         m_langVer = {};
+        m_currentSection = {};
         m_translationDict.clear();
     }
 
@@ -333,32 +332,34 @@ namespace borr {
         // now search for inline comments
         const auto commentlessLine = removeInlineComments(line);
 
-        static string currentSection{};
-        if (isSection(commentlessLine, currentSection)) { return; } // nothing more to do here
+        if (isSection(commentlessLine, m_currentSection)) { return; } // nothing more to do here
 
         string field;
         string translation;
         if (!isTranslation(commentlessLine, field, translation)) { return; } // nothing more to do here
 
-        if (currentSection.empty()) {
+        if (m_currentSection.empty()) {
             if (field == LANG_DESC_FIELD) {
+                printf("Found LANG_DESC_FIELD\n");
                 m_langDescription = translation;
                 return;
             } else if (field == LANG_ID_FIELD) {
+                printf("Found LANG_ID_FIELD\n");
                 m_langId = translation;
                 return;
             } else if (field == LANG_VER_FIELD) {
+                printf("Found LANG_VER_FIELD\n");
                 langversion::fromString(translation, m_langVer);
                 return;
             }
             return;
         }
 
-        if (!getSection(currentSection).has_value()) {
-            m_translationDict.emplace(currentSection, sect_t{});
+        if (!getSection(m_currentSection).has_value()) {
+            m_translationDict.emplace(m_currentSection, sect_t{});
         }
 
-        auto& section = m_translationDict[currentSection];
+        auto& section = m_translationDict[m_currentSection];
 
         const auto trimmedField = extensions::trim(field, "[]");
 
