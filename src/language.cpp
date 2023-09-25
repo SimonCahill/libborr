@@ -340,15 +340,12 @@ namespace borr {
 
         if (m_currentSection.empty()) {
             if (field == LANG_DESC_FIELD) {
-                printf("Found LANG_DESC_FIELD\n");
                 m_langDescription = translation;
                 return;
             } else if (field == LANG_ID_FIELD) {
-                printf("Found LANG_ID_FIELD\n");
                 m_langId = translation;
                 return;
             } else if (field == LANG_VER_FIELD) {
-                printf("Found LANG_VER_FIELD\n");
                 langversion::fromString(translation, m_langVer);
                 return;
             }
