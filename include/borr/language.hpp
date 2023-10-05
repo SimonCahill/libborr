@@ -160,7 +160,7 @@ namespace borr {
             static language fromString(const string&); //!< Load a pre-loaded language file from memory
 
         public: // +++ Constructor / Destructor +++
-                            language(language&&) = default; //!< Default move ctor
+                            // language(const language&) = default;
             ~               language() = default; //!< Default dtor
 
         public: // +++ Getters +++

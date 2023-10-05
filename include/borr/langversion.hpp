@@ -46,7 +46,7 @@ namespace borr {
 
         public: // +++ Constructor / Destructor +++
             langversion(): m_major(string::npos), m_minor(string::npos), m_revision(string::npos) {}
-            explicit langversion(const langversion& x): m_major(x.m_major), m_minor(x.m_minor), m_revision(x.m_revision) {}
+            explicit langversion(const langversion& x) = default;
             ~langversion() = default; //!< Default dtor
 
         public: // +++ Getters +++
